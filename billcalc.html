@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #result {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bill Calculator</h1>
+    <label for="ratePlan">Rate Plan Amount:</label>
+    <input type="number" id="ratePlan"><br><br>
+    <label for="discount">Discount Amount:</label>
+    <input type="number" id="discount"><br><br>
+
+    <label for="province">Province:</label>
+    <select id="province">
+        <!-- Options will be dynamically added here -->
+    </select><br><br>
+    
+    <label for="credit">Total Credit Amount:</label>
+    <input type="number" id="credit"><br><br>
+    <button onclick="calculate()">Calculate</button><br><br>
+    <p>Result: <span id="result"></span></p>
+
+    <script>
+        // Define your conversion list
+        const conversionList = {
+            'BC': 0.12,
+            'AB': 0.05,
+            'SK': 0.11,
+            'MB': 0.12,
+            'ON': 0.13,
+            'QC': 0.14975,
+            'NB': 0.15,
+            'NS': 0.15,
+            'PE': 0.15,
+            'NF': 0.15,
+            'YT': 0.05,
+            'NT': 0.05,
+            'NU': 0.05,
+        };
+
+        // Function to populate the dropdown list with options
+        function populateProvinceDropdown() {
+            var selectElement = document.getElementById('province');
+            // Clear existing options
+            selectElement.innerHTML = '';
+            // Add options based on the keys of the conversionList
+            Object.keys(conversionList).forEach(function(key) {
+                var option = document.createElement('option');
+                option.value = key;
+                option.textContent = key;
+                selectElement.appendChild(option);
+            });
+        }
+
+        // Call the function to populate the dropdown on page load
+        populateProvinceDropdown();
+
+        function calculate() {
+            // Retrieve string input
+            var province = document.getElementById('province').value.toUpperCase();
+
+            // Convert the string into a number based on the conversion list
+            var convertedNumber = conversionList[province];
+
+            // Retrieve other numbers
+            var ratePlan = parseFloat(document.getElementById('ratePlan').value);
+            var discount = parseFloat(document.getElementById('discount').value);
+            var credit = parseFloat(document.getElementById('credit').value);
+
+            // Your formula here, using the converted number and other numbers
+            var result = (ratePlan - discount) * (1 + convertedNumber) - credit;
+
+            // Round the result to the nearest hundredth
+            result = roundToHundredth(result);
+
+            // Display the result
+            document.getElementById('result').innerText = result;
+        }
+
+        function roundToHundredth(number) {
+            return Math.round(number * 100) / 100;
+        }
+    </script>
+
+    <p>This calculator works by first subtracting the Discount amount from the Rate Plan amount. It then adds on applicable taxes based on the province selected.
+    Lastly, it subtracts the Total Credits and calculates the correct total for the bill.</p>
+
+    <p>For a list of Province Abbreviations please visit: <a href="https://www.fs.usda.gov/database/feis/format.html#:~:text=ON%20(Ontario),PE%20(Prince%20Edward%20Island)" target="_blank">Province Abbreviations</a></p>
+</body>
+</html>
